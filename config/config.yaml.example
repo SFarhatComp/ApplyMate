@@ -1,0 +1,45 @@
+user:
+  name: "Your Name"
+  email: "your.email@example.com"
+  phone: "123-456-7890"
+  linkedin: "https://www.linkedin.com/in/yourprofile/"
+  github: "https://github.com/yourusername"
+
+job_search:
+  keywords: ["Software Engineer", "Python Developer", "Software Developer"]
+  locations: ["Remote", "San Francisco, CA", "New York, NY"]
+  exclude_keywords: ["Senior", "10+ years", "Manager", "Lead", "Director"]
+  min_salary: 80000  # in USD
+  max_commute_distance: 25  # in miles
+
+job_boards:
+  indeed:
+    enabled: false
+    api_key: ""  # if available
+  linkedin:
+    enabled: true
+    username: "${LINKEDIN_USERNAME}"  # Will be replaced by environment variable
+    password: "${LINKEDIN_PASSWORD}"  # Will be replaced by environment variable
+  glassdoor:
+    enabled: false
+
+application:
+  max_daily_applications: 10
+  delay_between_applications: 300  # seconds
+  randomize_delay: true
+  delay_range: [200, 500]  # seconds
+  generate_cover_letters: true  # Toggle for cover letter generation
+
+captcha:
+  service: "none"  # options: "2captcha", "anticaptcha", "none"
+  api_key: "${CAPTCHA_API_KEY}"  # Will be replaced by environment variable
+
+browser:
+  headless: true  # Set to false to see the browser
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  viewport_width: 1920
+  viewport_height: 1080
+
+llm:
+  ollama_model: "llama2"  # Model to use with Ollama 
+  max_workers: 2  # Maximum number of concurrent threads for cover letter generation 
