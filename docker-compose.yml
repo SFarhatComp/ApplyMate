@@ -4,10 +4,9 @@ services:
   job-application-ai:
     build: .
     container_name: job-application-ai
+    privileged: true
     volumes:
-      - ./config:/app/config
-      - ./data:/app/data
-      - ./logs:/app/logs
+      - ./:/app  # Mount the entire project directory
     environment:
       - LINKEDIN_USERNAME=${LINKEDIN_USERNAME}
       - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
@@ -21,6 +20,8 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    # Keep container running but don't start app
+    command: tail -f /dev/null
     restart: unless-stopped
     depends_on:
       - ollama
@@ -32,6 +33,7 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    privileged: true
     volumes:
       - ollama_data:/root/.ollama
     # Add GPU support
@@ -45,18 +47,20 @@ services:
     ports:
       - "11434:11434"
     restart: unless-stopped
-    # Add a healthcheck to ensure Ollama is ready
+    # Add a healthcheck that also pulls the model on first run
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: 
+        - CMD-SHELL
+        - |
+          if [ ! -f /tmp/model_pulled ]; then
+            echo "Pulling mistral model..."
+            ollama pull mistral && touch /tmp/model_pulled
+          fi
+          curl -f http://localhost:11434/api/tags || exit 1
       interval: 30s
-      timeout: 10s
-      retries: 3
-    # Add command to pull mistral model on startup
-    command: >
-      sh -c "ollama serve &
-             sleep 10 &&
-             ollama pull mistral &&
-             wait"
+      timeout: 300s
+      retries: 5
+      start_period: 10s
 
 volumes:
   ollama_data: 

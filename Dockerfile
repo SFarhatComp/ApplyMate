@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libpangocairo-1.0-0 \
     libnspr4 \
     libnss3 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -50,5 +51,5 @@ RUN if [ ! -f config/config.yaml ]; then cp config/config.yaml.example config/co
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
-# Run the application
-CMD ["python", "main.py"] 
+# Don't auto-start the application
+# Note: When running in dev mode, we'll mount the code dynamically 
