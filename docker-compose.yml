@@ -1,5 +1,9 @@
 version: '3.8'
 
+# NOTE: GPU USAGE
+# If you have NVIDIA GPU, use: docker-compose up -d
+# If you don't have GPU, use: docker-compose -f docker-compose.yml -f docker-compose.cpu.yml up -d
+
 services:
   job-application-ai:
     build: .
@@ -12,7 +16,8 @@ services:
       - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
       - CAPTCHA_API_KEY=${CAPTCHA_API_KEY}
       - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama:11434}
-    # Add GPU support
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+    # GPU support - will be disabled in the CPU override
     deploy:
       resources:
         reservations:
@@ -36,7 +41,9 @@ services:
     privileged: true
     volumes:
       - ollama_data:/root/.ollama
-    # Add GPU support
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+    # GPU support - will be disabled in the CPU override
     deploy:
       resources:
         reservations:

@@ -203,6 +203,19 @@ deploy:
           capabilities: [gpu]
 ```
 
+### Running Without GPU (CPU-only mode)
+
+If you don't have an NVIDIA GPU or the proper drivers installed, you can still run the application in CPU-only mode:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.cpu.yml up -d
+```
+
+Note that in CPU-only mode:
+- LLM inference will be significantly slower
+- Cover letter generation will take longer
+- You may want to reduce the number of concurrent workers in config.yaml
+
 ### Verifying GPU Usage
 
 You can verify that the GPU is being used by checking the GPU utilization:

@@ -1,0 +1,15 @@
+# CPU-only override file
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.cpu.yml up -d
+
+services:
+  job-application-ai:
+    deploy: 
+      resources: {} # Removes the GPU configuration
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=none
+
+  ollama:
+    deploy:
+      resources: {} # Removes the GPU configuration
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=none 
